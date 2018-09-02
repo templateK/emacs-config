@@ -5,6 +5,8 @@
 ;; Author: Paul Rankin <hello@paulwrankin.com>
 ;; Keywords: wp, text
 ;; Package-Version: 20180531.737
+
+
 ;; Version: 1.6.1
 ;; Package-Requires: ((emacs "24.4"))
 ;; URL: https://github.com/rnkn/olivetti
@@ -155,6 +157,13 @@ This option does not affect file contents."
   :safe 'booleanp
   :group 'olivetti)
 
+(defcustom olivetti-hide-line-numbers
+  nil
+  "Hide the line numbers."
+  :type 'boolean
+  :safe 'booleanp
+  :group 'olivetti)
+
 (defcustom olivetti-lighter
   " Olv"
   "Mode-line indicator for `olivetti-mode'."
@@ -186,6 +195,7 @@ relative to each window. Finally set the window margins, taking
 care that the maximum size is 0."
   (dolist (window (get-buffer-window-list nil nil t))
     (olivetti-reset-window window)
+    (when olivetti-hide-line-numbers (display-line-numbers-mode 0))
     (let ((width (olivetti-safe-width olivetti-body-width window))
           (window-width (window-total-width window))
           (fringes (window-fringes window))
@@ -256,6 +266,9 @@ the following:
          (kill-local-variable 'mode-line-format))
         (olivetti-hide-mode-line
          (setq-local mode-line-format nil))))
+
+(defun olivetti-reset-line-numbers (&optional arg)
+  (when olivetti-hide-line-numbers (display-line-numbers-mode 1)))
 
 (defun olivetti-toggle-hide-mode-line ()
   "Toggle the visibility of the mode-line.
@@ -391,6 +404,7 @@ hidden."
       (remove-hook hook 'olivetti-set-environment t))
     (olivetti-reset-all-windows)
     (olivetti-set-mode-line 'exit)
+    (olivetti-reset-line-numbers)
     (when (and olivetti-recall-visual-line-mode-entry-state
                (not olivetti--visual-line-mode))
       (visual-line-mode 0))

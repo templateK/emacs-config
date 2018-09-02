@@ -10,20 +10,12 @@
 (defvar required-packages
   '(;; packss
     use-package
-    evil
-    evil-visual-replace
-    popwin
-    popup
-    company
-    flycheck
-    flycheck-pos-tip
-    flycheck-color-mode-line
-
-    dante
-    gruvbox-theme
-    habamax-theme
-    direnv
-    magit
+    evil evil-visual-replace
+    popwin popup
+    flycheck flycheck-pos-tip flycheck-color-mode-line
+    company dante direnv
+    gruvbox-theme habamax-theme
+    magit evil-magit
     )
    "a list of packages to ensure are installed at launch.")
 

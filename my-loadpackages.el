@@ -1,5 +1,6 @@
 (load "~/.emacs.d/my-packages.el")
 
+
 (require 'use-package)
 
 (use-package color-theme
@@ -16,6 +17,13 @@
   :config
   (global-set-key (kbd "s-g") 'magit-status)
  ) ;; end of magit
+
+(use-package evil-magit
+  :after magit
+  :init
+  :config
+  (evil-magit-use-y-for-yank)
+  ) ;; end of evil-magit
 
 (use-package popwin
   :init

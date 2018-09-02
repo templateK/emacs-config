@@ -1,0 +1,2 @@
+;;; -*- no-byte-compile: t -*-
+(define-package "evil-visual-replace" "20171016.613" "search/replace commands for evil visual state, inc. blocks" '((evil "1.0.0")) :commit "163fc827a1ffc106475da470c37fb26f4cc9b008" :keywords '("evil" "search" "replace" "regexp" "block" "rectangular" "region" "visual") :authors '(("Troy Pracy")) :maintainer '("Troy Pracy") :url "https://github.com/troyp/evil-visual-replace")

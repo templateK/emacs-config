@@ -23,6 +23,7 @@
     gruvbox-theme
     habamax-theme
     direnv
+    magit
     )
    "a list of packages to ensure are installed at launch.")
 

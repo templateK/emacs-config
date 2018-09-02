@@ -11,6 +11,11 @@
   ;; (load-theme 'habamax t)
  ) ;; end of color-theme
 
+(use-package magit
+  :init
+  :config
+  (global-set-key (kbd "s-g") 'magit-status)
+ ) ;; end of magit
 
 (use-package popwin
   :init

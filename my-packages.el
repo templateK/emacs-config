@@ -2,7 +2,7 @@
 
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "https://melpa.org/packages/") t)
 ;; (package-initialize)
 ; defvar is the correct way to declare global variables
 ; ; you might see setq as well, but setq is supposed to be use just to set variables,
@@ -10,7 +10,7 @@
 (defvar required-packages
   '(;; packss
     use-package
-    evil evil-visual-replace
+    evil evil-leader evil-visual-replace evil-nerd-commenter
     popwin popup
     flycheck flycheck-pos-tip flycheck-color-mode-line
     company dante direnv

@@ -1,6 +1,5 @@
 (load "~/.emacs.d/my-packages.el")
 
-
 (require 'use-package)
 
 (use-package color-theme
@@ -15,15 +14,9 @@
 (use-package magit
   :init
   :config
-  (global-set-key (kbd "s-g") 'magit-status)
+  ;; (global-set-key (kbd "s-g") 'magit-status)
+  (evil-leader/set-key "gs" 'magit-status)
  ) ;; end of magit
-
-(use-package evil-magit
-  :after magit
-  :init
-  :config
-  (evil-magit-use-y-for-yank)
-  ) ;; end of evil-magit
 
 (use-package popwin
   :init
@@ -53,22 +46,16 @@
 (use-package flycheck-color-mode-line
   :after flycheck
   :init
-  :config
-  ) ;; end of flycheck-color-mode-line
-
-(use-package flycheck-pos-tip
-  :after flycheck
-  :init
-  :config
-  (flycheck-pos-tip-mode)
- ) ;; end of flycheck-pos-tip
-
-(use-package flycheck-color-mode-line
-  :after flycheck
-  :init
   (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)
   :config
  ) ;; end of flycheck-color-mode-line
+
+;; (use-package flycheck-pos-tip
+;;   :after flycheck
+;;   :init
+;;   :config
+;;   (flycheck-pos-tip-mode)
+;;  ) ;; end of flycheck-pos-tip
 
 
 ;; ENVironment ;;
@@ -101,6 +88,7 @@
   :commands 'dante-mode
   :init
   :config
+  (evil-leader/set-key ",a" 'dante-type-at)
   ;;(add-hook 'dante-mode-hook 'dante-restart)
   ) ;; end of dante
 
@@ -172,12 +160,47 @@
     (evil-visual-replace-visual-bindings)
   ) ;; end of evil-visual-replace
 
+(use-package evil-leader
+  :after (evil magit)
+  :init
+  :config
+  (setq-default evil-leader/in-all-states t)
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+   "ff" 'find-file
+   "fd" 'evil-delete-buffer
+   "fs" 'switch-to-buffer
+   "wd" 'evil-window-delete
+   "wh" 'evil-window-left
+   "wj" 'evil-window-down
+   "wk" 'evil-window-up
+   "wl" 'evil-window-right
+   "wc" 'olivetti-mode
+   "w1" 'delete-other-windows
+   "ad" 'dired
+   )
+   (evil-leader/set-key-for-mode 'dante-mode "a" 'dante-type-at)
+  (global-evil-leader-mode) 
+ ) ;; end of evil-leader
+
+(use-package evil-nerd-commenter
+  :config
+  (evil-leader/set-key
+    "cl" 'evilnc-comment-or-uncomment-lines)
+  ) ;; end of evil-nert-commenter
+
+(use-package evil-magit
+  :after magit
+  :init
+  :config
+  ;;(evil-magit-use-y-for-yank)
+  ) ;; end of evil-magit
+
 (use-package olivetti
   :ensure t
   :init
-  (setq olivetti-body-width 100)
+  (setq olivetti-body-width 120)
   (setq olivetti-hide-mode-line t)
   (setq olivetti-hide-line-numbers t)
   :config
  ) ;; end of olivetti
-

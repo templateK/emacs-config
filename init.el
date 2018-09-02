@@ -20,7 +20,8 @@
 (load "~/.emacs.d/my-loadpackages.el")
 
 ;; cycle through buffers with Ctrl-Tab
-(global-set-key (kbd "<s-'>") 'other-window)
+(global-set-key (kbd "s-'") 'other-window)
+
 
 (global-set-key (kbd "M-<left>") 'windmove-left)          ; move to left window
 (global-set-key (kbd "M-<right>") 'windmove-right)        ; move to right window
@@ -36,7 +37,7 @@
 
 ;; line numbers
 (global-display-line-numbers-mode)
-(setq-default display-line-numbers-width 4)
+(setq-default display-line-numbers-width 3)
 
 ;; old deprecated 
 ;; (global-linum-mode 1)
@@ -47,7 +48,7 @@
 
 ;; no tabs
 (setq c-basic-indent 4)
-(setq tab-width 4)
+(setq tab-width 2)
 (setq-default indent-tabs-mode nil)
 (setq indent-tabs-mode nil)
 
@@ -77,7 +78,7 @@
 
 ;; fontss
 (setq-default line-spacing 2)
-(add-to-list 'default-frame-alist '(font . "Liga Dank Mono-18:width=normal"))
+(add-to-list 'default-frame-alist '(font . "Ubuntu Mono-14:width=normal"))
 
 ;; no need toolbar scrollbar title and make transparent window
 (tool-bar-mode 0)

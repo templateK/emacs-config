@@ -219,11 +219,13 @@
   ))) ;; end of dante
 
 (use-package haskell-mode
+  :after evil-leader
   :init
   (defun haskell-search-hoogle ()
     "Search hoogle for the word under the cursor"
     (interactive)
     (browse-url-generic (concat "https://hoogle.haskell.org/?hoogle=" (thing-at-point 'word))))
+  (evil-leader/set-key-for-mode 'haskell-mode "h" 'haskell-hoogle-lookup-from-local)
   :commands 'haskell-mode
   :config
   ;a few convenient shortcuts

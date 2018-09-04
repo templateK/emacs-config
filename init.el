@@ -16,7 +16,7 @@
 ;; load packages
 ;; (load "~/.emacs.d/my-loadpackages.el")
 
-;;keyss
+;;keyssg
 ;; non-evilified buffer keybindings
 (global-set-key (kbd "s-'") 'other-window)
 (global-set-key (kbd "M-<left>") 'windmove-left)          ; move to left window
@@ -27,6 +27,9 @@
 (global-set-key (kbd "C-`") 'previous-buffer)
 (global-set-key (kbd "s-b") 'kill-this-buffer)            ; kill current buffer without asking
 (global-set-key (kbd "s-w") nil)
+;;(global-set-key [escape] 'keyboard-quit)                          ; easy escaping from stale state
+(global-set-key (kbd "<escape>")      'keyboard-escape-quit)
+
 
 ;; line numbers
 (global-display-line-numbers-mode)
@@ -194,19 +197,20 @@
 ;; default is firefox. Change this if you want to open hoogle on a different browser.
 (setq browse-url-generic-program (executable-find "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"))
 
+;; dantess
 (use-package dante
-  :after (direnv haskell-mode)
+  :after (evil direnv haskell-mode)
   :ensure t
   :init
   :config
-  (evil-leader/set-key ",a" 'dante-type-at)
+  (evil-leader/set-key-for-mode 'haskell-mode "a" 'dante-type-at)
   (let ((filename "/Users/taemu/.emacs.d/native/libemacs-dyn-cabal.dylib"))
     (if (and (file-exists-p filename) (file-executable-p filename))
         (progn
           (module-load filename)
           (fset 'dante-target (lambda () (emacs-dyn-cabal-target (haskell-cabal-find-file) (buffer-file-name))))
-          (setq-default dante-repl-command-line '("cabal" "new-repl" (dante-target) "--builddir=dist/dante")))
-      (setq-default dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist/dante"))
+          (setq-default dante-repl-command-line '("cabal" "repl" (dante-target) "--builddir=dist/dante")))
+      (setq-default dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante"))
       ;; (setq-default dante-repl-command-line-methods-alist `((bare  . ,(lambda (root) '("cabal" "repl" dante-target "--builddir=dist/dante")))))
   ))) ;; end of dante
 
@@ -264,10 +268,20 @@
 (use-package evil-leader
   :after (evil magit)
   :init
+  ;; easy user init file editing
+  (defun find-user-init-file ()
+    "Edit the `user-init-file', in another window."
+    (interactive)
+    (find-file-other-window user-init-file))
+  (defun reload-user-init-file ()
+    "Edit the `user-init-file', in another window."
+    (interactive)
+    (load-file user-init-file))
   :config
   (setq-default evil-leader/in-all-states t)
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
+    ;; keysse
    "ff" 'find-file
    "fd" 'evil-delete-buffer
    "fs" 'switch-to-buffer
@@ -279,8 +293,12 @@
    "wc" 'olivetti-mode
    "w1" 'delete-other-windows
    "ad" 'dired
-   )
-   (evil-leader/set-key-for-mode 'dante-mode "a" 'dante-type-at)
+   "fed" 'find-user-init-file
+   "qq" 'save-buffers-kill-emacs
+   ) ;; end of set-key
+  (evil-leader/set-key-for-mode 'dired-mode
+    "k" 'dired-up-directory
+    ) ;; end of set-key-for-mode
   (global-evil-leader-mode) 
  ) ;; end of evil-leader
 
@@ -322,18 +340,5 @@
   (evil-leader/set-key "gs" 'magit-status)
  ) ;; end of magit
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("f27c3fcfb19bf38892bc6e72d0046af7a1ded81f54435f9d4d09b3bff9c52fc1" default))
- '(package-selected-packages
-   '(dante flycheck-color-mode-line flycheck-pos-tip flycheck company popup seti-theme color-theme popwin evil)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(custom-set-variables)
+(custom-set-faces)

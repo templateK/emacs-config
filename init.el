@@ -27,8 +27,12 @@
 (global-set-key (kbd "C-`") 'previous-buffer)
 (global-set-key (kbd "s-b") 'kill-this-buffer)            ; kill current buffer without asking
 (global-set-key (kbd "s-w") nil)
-;;(global-set-key [escape] 'keyboard-quit)                          ; easy escaping from stale state
-(global-set-key (kbd "<escape>")      'keyboard-escape-quit)
+
+;; easy escaping from stale state
+;; somewhat works. but maybe below is better.
+;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; attemp to save orignal ESC functionality while support remap ESC to C-g
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 
 ;; line numbers
@@ -302,10 +306,11 @@
   (global-evil-leader-mode) 
  ) ;; end of evil-leader
 
+;; regionss
 (use-package expand-region
   :after evil
   :init
-  (setq expand-region-contract-fast-key "x")
+  (setq expand-region-contract-fast-key ";")
   :config
   (evil-leader/set-key "v" 'er/expand-region)
   ) ;; end of expand-region

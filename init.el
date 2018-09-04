@@ -49,6 +49,7 @@
 (setq indent-tabs-mode nil)
 
 ;; dired
+;; this is disabled because it feels sluggish.
 ;; (setq ls-lisp-use-insert-directory-program t)
 ;; (setq insert-directory-program "/usr/local/bin/gls")
 ;; (setq dired-listing-switches "-alXGh --group-directories-first")
@@ -110,6 +111,7 @@
     ) ;; end registered packages
    "a list of packages to ensure are installed at launch.") ;; end of defvar
 
+
 ;; check all packages installed and if not, install it.
 (require 'cl-lib)
 
@@ -128,6 +130,17 @@
 
 ;; start of use-package
 (require 'use-package)
+
+;; custom packages
+(add-to-list 'load-path "~/.emacs.d/custom/hlint")
+
+(use-package hs-lint
+  :after compile
+  :init
+  :config
+  ) ;; end of hs-hlint
+
+
 ;; themess
 (use-package color-theme
   :init
@@ -166,7 +179,7 @@
    "en" 'flycheck-next-error
    "e;" 'flycheck-previous-error)
   (add-hook 'flycheck-mode-hook 'dante-mode)
-  ) ;; end of flycheck
+ ) ;; end of flycheck
 
 ;; (use-package flycheck-color-mode-line
 ;;   :after flycheck
@@ -182,28 +195,13 @@
 ;;   (flycheck-pos-tip-mode)
 ;;  ) ;; end of flycheck-pos-tip
 
-;; popss
-(use-package popwin
-  :init
-  (setq popwin:popup-window-height 26)
-  :config
-  (global-set-key (kbd "s-p") 'popwin:close-popup-window)
-  (push '(flycheck-error-list-mode 
-          :dedicated t 
-          :position bottom 
-          :stick t 
-          :noselect t) 
-        popwin:special-display-config)
-  (popwin-mode 1)
- ) ;; end of popwin
-
 ;; hass
 ;; default is firefox. Change this if you want to open hoogle on a different browser.
 (setq browse-url-generic-program (executable-find "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"))
 
 ;; dantess
 (use-package dante
-  :after (evil direnv haskell-mode)
+  :after (evil direnv flycheck)
   :ensure t
   :init
   :config
@@ -216,7 +214,8 @@
           (setq-default dante-repl-command-line '("cabal" "repl" (dante-target) "--builddir=dist/dante")))
       (setq-default dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante"))
       ;; (setq-default dante-repl-command-line-methods-alist `((bare  . ,(lambda (root) '("cabal" "repl" dante-target "--builddir=dist/dante")))))
-  ))) ;; end of dante
+  (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
+ ))) ;; end of dante
 
 (use-package haskell-mode
   :after evil-leader
@@ -229,12 +228,11 @@
   :commands 'haskell-mode
   :config
   ;a few convenient shortcuts
-  (define-key haskell-mode-map (kbd "C-c C-`") 'haskell-interactive-bring)
-  (define-key haskell-mode-map (kbd "C-l C-l") 'haskell-process-load-or-reload)
-  (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+  ;; (define-key haskell-mode-map (kbd "C-c C-`") 'haskell-interactive-bring)
+  ;; (define-key haskell-mode-map (kbd "C-l C-l") 'haskell-process-load-or-reload)
+  ;; (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
   ; search work under the cursor in hoogle
-  (define-key haskell-mode-map (kbd "C-:") 'haskell-search-hoogle)
-  ;; (add-hook 'haskell-mode-hook 'dante-mode)
+  ;; (define-key haskell-mode-map (kbd "C-:") 'haskell-search-hoogle)
   (add-hook 'haskell-mode-hook 'flycheck-mode)  
  ) ;; end of haskell-mode
 
@@ -245,6 +243,21 @@
         direnv-show-paths-in-summary nil)
   (global-set-key (kbd "M-z") 'direnv-mode)
  ) ;; end of direnv
+
+;; popss
+(use-package popwin
+  :init
+  (setq popwin:popup-window-height 26)
+  :config
+  (global-set-key (kbd "s-p") 'popwin:close-popup-window)
+  (push '(flycheck-error-list-mode
+          :dedicated t
+          :position bottom
+          :stick t
+          :noselect t)
+        popwin:special-display-config)
+  (popwin-mode 1)
+ ) ;; end of popwin
 
 ;; evilss
 (use-package evil

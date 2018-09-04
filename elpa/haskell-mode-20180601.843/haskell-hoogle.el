@@ -85,13 +85,13 @@ is asked to show extra info for the items matching QUERY.."
 (defun haskell-hoogle-start-server ()
   "Start hoogle local server."
   (interactive)
-  (if (executable-find "hoogle")
+  (if (executable-find haskell-hoogle-command)
       (unless (haskell-hoogle-server-live-p)
         (set 'haskell-hoogle-server-process
              (start-process
               haskell-hoogle-server-process-name
               (get-buffer-create haskell-hoogle-server-buffer-name)
-              "hoogle" "server" "-p" (number-to-string haskell-hoogle-port-number))))
+              haskell-hoogle-command "server" "--local" "--haskell" "-p" (number-to-string haskell-hoogle-port-number))))
     (error "\"hoogle\" executable not found")))
 
 (defun haskell-hoogle-server-live-p ()

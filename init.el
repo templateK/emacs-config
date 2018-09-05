@@ -16,17 +16,20 @@
 ;; load packages
 ;; (load "~/.emacs.d/my-loadpackages.el")
 
-;;keyssg
+;;keyg
 ;; non-evilified buffer keybindings
 (global-set-key (kbd "s-'") 'other-window)
 (global-set-key (kbd "M-<left>") 'windmove-left)          ; move to left window
 (global-set-key (kbd "M-<right>") 'windmove-right)        ; move to right window
 (global-set-key (kbd "M-<up>") 'windmove-up)              ; move to upper window
 (global-set-key (kbd "M-<down>") 'windmove-down)          ; move to lower window
-(global-set-key (kbd "C-~") 'next-buffer)
-(global-set-key (kbd "C-`") 'previous-buffer)
+(global-set-key (kbd "C-<tab>") 'next-buffer)
+(global-set-key (kbd "C-M-<tab>") 'previous-buffer)
 (global-set-key (kbd "s-b") 'kill-this-buffer)            ; kill current buffer without asking
-(global-set-key (kbd "s-w") nil)
+(global-set-key (kbd "s-w") 'switch-to-buffer)
+
+;; auto indent
+;; (define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; easy escaping from stale state
 ;; somewhat works. but maybe below is better.
@@ -56,9 +59,6 @@
 
 ;; scrolling
 (setq scroll-step 1 scroll-conservatively 10000)
-
-;; auto indent
-(define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; parens
 (show-paren-mode 1)
@@ -174,10 +174,6 @@
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   (setq-default flycheck-check-syntax-automatically '(save mode-enable))
   :config
-  (evil-leader/set-key
-   "el" 'toggle-flycheck-error-list
-   "en" 'flycheck-next-error
-   "e;" 'flycheck-previous-error)
   (add-hook 'flycheck-mode-hook 'dante-mode)
  ) ;; end of flycheck
 
@@ -201,11 +197,10 @@
 
 ;; dantess
 (use-package dante
-  :after (evil direnv flycheck)
+  :after (direnv flycheck)
   :ensure t
   :init
   :config
-  (evil-leader/set-key-for-mode 'haskell-mode "a" 'dante-type-at)
   (let ((filename "/Users/taemu/.emacs.d/native/libemacs-dyn-cabal.dylib"))
     (if (and (file-exists-p filename) (file-executable-p filename))
         (progn
@@ -218,13 +213,11 @@
  ))) ;; end of dante
 
 (use-package haskell-mode
-  :after evil-leader
   :init
   (defun haskell-search-hoogle ()
     "Search hoogle for the word under the cursor"
     (interactive)
     (browse-url-generic (concat "https://hoogle.haskell.org/?hoogle=" (thing-at-point 'word))))
-  (evil-leader/set-key-for-mode 'haskell-mode "h" 'haskell-hoogle-lookup-from-local)
   :commands 'haskell-mode
   :config
   ;a few convenient shortcuts
@@ -248,8 +241,8 @@
 (use-package popwin
   :init
   (setq popwin:popup-window-height 26)
-  :config
   (global-set-key (kbd "s-p") 'popwin:close-popup-window)
+  :config
   (push '(flycheck-error-list-mode
           :dedicated t
           :position bottom
@@ -261,6 +254,7 @@
 
 ;; evilss
 (use-package evil
+  :after evil-leader
   :ensure t
   :init
   (global-set-key (kbd "s-j") 'evil-scroll-down)
@@ -277,15 +271,7 @@
   (evil-mode 1)
  ) ;; end of evil
 
-(use-package evil-visual-replace
-  :after evil
-  :init
-  :config
-    (evil-visual-replace-visual-bindings)
-  ) ;; end of evil-visual-replace
-
 (use-package evil-leader
-  :after (evil magit)
   :init
   ;; easy user init file editing
   (defun find-user-init-file ()
@@ -296,14 +282,27 @@
     "Edit the `user-init-file', in another window."
     (interactive)
     (load-file user-init-file))
-  :config
   (setq-default evil-leader/in-all-states t)
+  :config
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-    ;; keysse
-   "ff" 'find-file
+    ;; keyss
+    ;; flycheck
+   "el" 'toggle-flycheck-error-list
+   "en" 'flycheck-next-error
+   "e;" 'flycheck-previous-error
+   ;; hs-lint
+   "l" 'hs-lint
+   ;; expand-region
+   "v" 'er/expand-region
+   ;; evil-nerd-commenter
+   "cl" 'evilnc-comment-or-uncomment-lines
+   ;; magit
+   "gs" 'magit-status
+
+   "fs" 'find-file
    "fd" 'evil-delete-buffer
-   "fs" 'switch-to-buffer
+   "ff" 'switch-to-buffer
    "wd" 'evil-window-delete
    "wh" 'evil-window-left
    "wj" 'evil-window-down
@@ -315,11 +314,25 @@
    "fed" 'find-user-init-file
    "qq" 'save-buffers-kill-emacs
    ) ;; end of set-key
-  (evil-leader/set-key-for-mode 'dired-mode
-    "k" 'dired-up-directory
-    ) ;; end of set-key-for-mode
+
+  ;; mode specifiy evil-leader keys
+  ;; (evil-leader/set-key-for-mode 'dired-mode "k" 'dired-up-directory)
+  (evil-leader/set-key-for-mode 'haskell-mode
+    ;; TODO: dante inserting type at
+    ;; "m" 'dante-blah
+    ";" 'dante-type-at
+    "h" 'haskell-hoogle-lookup-from-local)
+  (evil-leader/set-key-for-mode 'emacs-lisp-mode "b" 'byte-compile-file)
+
   (global-evil-leader-mode) 
  ) ;; end of evil-leader
+
+(use-package evil-visual-replace
+  :after evil
+  :init
+  :config
+  (evil-visual-replace-visual-bindings)
+ ) ;; end of evil-visual-replace
 
 ;; regionss
 (use-package expand-region
@@ -327,14 +340,11 @@
   :init
   (setq expand-region-contract-fast-key ";")
   :config
-  (evil-leader/set-key "v" 'er/expand-region)
   ) ;; end of expand-region
 
 (use-package evil-nerd-commenter
   :init
   :config
-  (evil-leader/set-key
-    "cl" 'evilnc-comment-or-uncomment-lines)
   ) ;; end of evil-nert-commenter
 
 (use-package evil-magit
@@ -356,8 +366,6 @@
 (use-package magit
   :init
   :config
-  ;; (global-set-key (kbd "s-g") 'magit-status)
-  (evil-leader/set-key "gs" 'magit-status)
  ) ;; end of magit
 
 (custom-set-variables)

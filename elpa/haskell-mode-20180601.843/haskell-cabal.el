@@ -138,47 +138,47 @@ it from list if one of the following conditions are hold:
   (haskell-cabal-buffers-clean (current-buffer)))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.cabal\\'" . haskell-cabal-mode))
+;; (add-to-list 'auto-mode-alist '("\\.cabal\\'" . haskell-cabal-mode))
 
-(defvar haskell-cabal-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-s") 'haskell-cabal-subsection-arrange-lines)
-    (define-key map (kbd "C-M-n") 'haskell-cabal-next-section)
-    (define-key map (kbd "C-M-p") 'haskell-cabal-previous-section)
-    (define-key map (kbd "M-n") 'haskell-cabal-next-subsection)
-    (define-key map (kbd "M-p") 'haskell-cabal-previous-subsection)
-    (define-key map (kbd "C-<down>") 'haskell-cabal-next-subsection)
-    (define-key map (kbd "C-<up>") 'haskell-cabal-previous-subsection)
-    (define-key map (kbd "C-c C-f") 'haskell-cabal-find-or-create-source-file)
-    (define-key map (kbd "M-g l") 'haskell-cabal-goto-library-section)
-    (define-key map (kbd "M-g e") 'haskell-cabal-goto-executable-section)
-    (define-key map (kbd "M-g b") 'haskell-cabal-goto-benchmark-section)
-    (define-key map (kbd "M-g t") 'haskell-cabal-goto-test-suite-section)
-    map))
+;; (defvar haskell-cabal-mode-map
+;;   (let ((map (make-sparse-keymap)))
+;;     (define-key map (kbd "C-c C-s") 'haskell-cabal-subsection-arrange-lines)
+;;     (define-key map (kbd "C-M-n") 'haskell-cabal-next-section)
+;;     (define-key map (kbd "C-M-p") 'haskell-cabal-previous-section)
+;;     (define-key map (kbd "M-n") 'haskell-cabal-next-subsection)
+;;     (define-key map (kbd "M-p") 'haskell-cabal-previous-subsection)
+;;     (define-key map (kbd "C-<down>") 'haskell-cabal-next-subsection)
+;;     (define-key map (kbd "C-<up>") 'haskell-cabal-previous-subsection)
+;;     (define-key map (kbd "C-c C-f") 'haskell-cabal-find-or-create-source-file)
+;;     (define-key map (kbd "M-g l") 'haskell-cabal-goto-library-section)
+;;     (define-key map (kbd "M-g e") 'haskell-cabal-goto-executable-section)
+;;     (define-key map (kbd "M-g b") 'haskell-cabal-goto-benchmark-section)
+;;     (define-key map (kbd "M-g t") 'haskell-cabal-goto-test-suite-section)
+;;     map))
 
 ;;;###autoload
-(define-derived-mode haskell-cabal-mode fundamental-mode "Haskell-Cabal"
-  "Major mode for Cabal package description files."
-  (setq-local font-lock-defaults
-              '(haskell-cabal-font-lock-keywords t t nil nil))
-  (add-to-list 'haskell-cabal-buffers (current-buffer))
-  (add-hook 'change-major-mode-hook 'haskell-cabal-unregister-buffer nil 'local)
-  (add-hook 'kill-buffer-hook 'haskell-cabal-unregister-buffer nil 'local)
-  (setq-local comment-start "-- ")
-  (setq-local comment-start-skip "\\(^[ \t]*\\)--[ \t]*")
-  (setq-local comment-end "")
-  (setq-local comment-end-skip "[ \t]*\\(\\s>\\|\n\\)")
-  (setq-local indent-line-function 'haskell-cabal-indent-line)
-  (setq indent-tabs-mode nil)
-  )
+;; (define-derived-mode haskell-cabal-mode fundamental-mode "Haskell-Cabal"
+;;   "Major mode for Cabal package description files."
+;;   (setq-local font-lock-defaults
+;;               '(haskell-cabal-font-lock-keywords t t nil nil))
+;;   (add-to-list 'haskell-cabal-buffers (current-buffer))
+;;   (add-hook 'change-major-mode-hook 'haskell-cabal-unregister-buffer nil 'local)
+;;   (add-hook 'kill-buffer-hook 'haskell-cabal-unregister-buffer nil 'local)
+;;   (setq-local comment-start "-- ")
+;;   (setq-local comment-start-skip "\\(^[ \t]*\\)--[ \t]*")
+;;   (setq-local comment-end "")
+;;   (setq-local comment-end-skip "[ \t]*\\(\\s>\\|\n\\)")
+;;   (setq-local indent-line-function 'haskell-cabal-indent-line)
+;;   (setq indent-tabs-mode nil)
+;;   )
 
-(make-obsolete 'haskell-cabal-get-setting
-               'haskell-cabal--get-field
-               "March 14, 2016")
-(defalias 'haskell-cabal-get-setting 'haskell-cabal--get-field
-  "Try to read value of field with NAME from current buffer.
-Obsolete function.  Defined for backward compatibility.  Use
-`haskell-cabal--get-field' instead.")
+;; (make-obsolete 'haskell-cabal-get-setting
+;;                'haskell-cabal--get-field
+;;                "March 14, 2016")
+;; (defalias 'haskell-cabal-get-setting 'haskell-cabal--get-field
+;;   "Try to read value of field with NAME from current buffer.
+;; Obsolete function.  Defined for backward compatibility.  Use
+;; `haskell-cabal--get-field' instead.")
 
 (defun haskell-cabal--get-field (name)
   "Try to read value of field with NAME from current buffer."

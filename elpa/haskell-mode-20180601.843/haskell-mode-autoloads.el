@@ -194,12 +194,12 @@ Mode for editing *.chs files of the c2hs haskell tool.
 ;;;### (autoloads nil "haskell-cabal" "haskell-cabal.el" (0 0 0 0))
 ;;; Generated autoloads from haskell-cabal.el
 
-(add-to-list 'auto-mode-alist '("\\.cabal\\'" . haskell-cabal-mode))
+;; (add-to-list 'auto-mode-alist '("\\.cabal\\'" . haskell-cabal-mode))
 
-(autoload 'haskell-cabal-mode "haskell-cabal" "\
-Major mode for Cabal package description files.
+;; (autoload 'haskell-cabal-mode "haskell-cabal" "\
+;; Major mode for Cabal package description files.
 
-\(fn)" t nil)
+;; \(fn)" t nil)
 
 (autoload 'haskell-cabal-get-field "haskell-cabal" "\
 Read the value of field with NAME from project's cabal file.

@@ -27,6 +27,7 @@
 (global-set-key (kbd "C-M-<tab>") 'previous-buffer)
 (global-set-key (kbd "s-b") 'kill-this-buffer)            ; kill current buffer without asking
 (global-set-key (kbd "s-w") 'switch-to-buffer)
+(global-set-key (kbd "C-c a") 'org-agenda)
 
 ;; auto indent
 ;; (define-key global-map (kbd "RET") 'newline-and-indent)
@@ -108,6 +109,7 @@
     company dante direnv
     gruvbox-theme habamax-theme
     magit evil-magit
+    org
     ) ;; end registered packages
    "a list of packages to ensure are installed at launch.") ;; end of defvar
 
@@ -268,6 +270,10 @@
   (define-key evil-visual-state-map (kbd "TAB") nil)
   (define-key evil-normal-state-map (kbd "C-.") nil)
   (define-key evil-normal-state-map (kbd "M-.") nil)
+
+  ;; https://github.com/cofi/evil-leader/issues/31
+  ;; but, it's not working for haskell-cabal-mode
+  ;; (evil-set-initial-state 'haskell-cabal-mode 'motion)
   (evil-mode 1)
  ) ;; end of evil
 
@@ -288,6 +294,7 @@
   (evil-leader/set-key
     ;; keyss
     ;; flycheck
+   "ee" 'flycheck-mode
    "el" 'toggle-flycheck-error-list
    "en" 'flycheck-next-error
    "e;" 'flycheck-previous-error

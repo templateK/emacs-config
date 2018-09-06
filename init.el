@@ -52,6 +52,8 @@
 (setq-default indent-tabs-mode nil)
 (setq indent-tabs-mode nil)
 
+;; enable region narrowing
+(put 'narrow-to-region 'disabled nil)
 ;; dired
 ;; this is disabled because it feels sluggish.
 ;; (setq ls-lisp-use-insert-directory-program t)

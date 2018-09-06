@@ -54,6 +54,9 @@
 
 ;; enable region narrowing
 (put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-defun  'disabled nil)
+(put 'narrow-to-page   'disabled nil)
+
 ;; dired
 ;; this is disabled because it feels sluggish.
 ;; (setq ls-lisp-use-insert-directory-program t)
@@ -308,6 +311,9 @@
    "cl" 'evilnc-comment-or-uncomment-lines
    ;; magit
    "gs" 'magit-status
+
+   "nn" 'narrow-to-region
+   "nw" 'widen
 
    "fs" 'find-file
    "fd" 'evil-delete-buffer

@@ -127,7 +127,8 @@
     magit evil-magit
     org
     ws-butler
-    ivy counsel swiper ivy-rich ace-window
+    ivy counsel swiper ace-window
+    ivy-rich
     ) ;; end registered packages
    "a list of packages to ensure are installed at launch.") ;; end of defvar
 
@@ -446,10 +447,8 @@
 ;; (use-package swiper)
 ;; (use-package counsel)
 
-
-
 (use-package ivy-rich
-  :after counsel
+  :after ivy counsel swiper
   :config
   (ivy-rich-mode 1)
  ) ;; end of ivy-rich

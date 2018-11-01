@@ -387,8 +387,7 @@ hidden."
   :lighter olivetti-lighter
   (if olivetti-mode
       (progn
-        (dolist (hook '(post-command-hook
-                        window-configuration-change-hook
+        (dolist (hook '(window-configuration-change-hook
                         window-size-change-functions))
           (add-hook hook 'olivetti-set-environment t t))
         (add-hook 'change-major-mode-hook
@@ -398,8 +397,7 @@ hidden."
         (setq olivetti--visual-line-mode visual-line-mode)
         (unless olivetti--visual-line-mode (visual-line-mode 1))
         (olivetti-set-environment))
-    (dolist (hook '(post-command-hook
-                    window-configuration-change-hook
+    (dolist (hook '(window-configuration-change-hook
                     window-size-change-functions))
       (remove-hook hook 'olivetti-set-environment t))
     (olivetti-reset-all-windows)

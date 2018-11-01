@@ -360,6 +360,7 @@
    "fd" 'kill-this-buffer
    "ff" 'ivy-switch-buffer
    "wd" 'evil-window-delete
+   "wD" 'ace-delete-window
    "wh" 'evil-window-left
    "wj" 'evil-window-down
    "wk" 'evil-window-up

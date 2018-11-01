@@ -18,16 +18,19 @@
 
 ;;keyg
 ;; non-evilified buffer keybindings
-(global-set-key (kbd "s-'") 'other-window)
+(global-set-key (kbd "M-'") 'other-window)
 (global-set-key (kbd "M-<left>") 'windmove-left)          ; move to left window
 (global-set-key (kbd "M-<right>") 'windmove-right)        ; move to right window
 (global-set-key (kbd "M-<up>") 'windmove-up)              ; move to upper window
 (global-set-key (kbd "M-<down>") 'windmove-down)          ; move to lower window
 (global-set-key (kbd "C-<tab>") 'next-buffer)
 (global-set-key (kbd "C-M-<tab>") 'previous-buffer)
-(global-set-key (kbd "s-b") 'kill-this-buffer)            ; kill current buffer without asking
-(global-set-key (kbd "s-w") 'switch-to-buffer)
+(global-set-key (kbd "M-b") 'kill-this-buffer)            ; kill current buffer without asking
+(global-set-key (kbd "M-w") 'switch-to-buffer)
 (global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "M-j") 'evil-scroll-down)
+(global-set-key (kbd "M-k") 'evil-scroll-up)
+(global-set-key (kbd "C-M-;") 'eval-region)
 
 ;; auto indent
 ;; (define-key global-map (kbd "RET") 'newline-and-indent)
@@ -47,10 +50,12 @@
 (setq ring-bell-function 'ignore)
 
 ;; no tabs
-(setq c-basic-indent 4)
-(setq tab-width 2)
+(setq c-basic-indent 2)
+(setq-default tab-width 2)
 (setq-default indent-tabs-mode nil)
 (setq indent-tabs-mode nil)
+;; (setq visible-cursor nil)
+(blink-cursor-mode 0)
 
 ;; enable region narrowing
 (put 'narrow-to-region 'disabled nil)
@@ -89,17 +94,22 @@
 
 ;; fontss
 (setq-default line-spacing 2)
-(add-to-list 'default-frame-alist '(font . "Noto Sans Mono CJK KR-14:width=normal"))
+;; (add-to-list 'default-frame-alist '(font . "Noto Sans Mono CJK KR-14:width=normal"))
+;; (add-to-list 'default-frame-alist '(font . "Consolas-10:width=normal"))
+;; (add-to-list 'default-frame-alist '(font . "Hack-10:width=normal"))
+(add-to-list 'default-frame-alist '(font . "Noto Sans Mono Cond SemBd-11.5:demibold"))
 
 ;; framess
 (tool-bar-mode 0)
-(scroll-bar-mode 0) 
-(set-frame-parameter (selected-frame) 'alpha '(85 85))
-(add-to-list 'default-frame-alist '(undecorated . t))
-(add-to-list 'default-frame-alist '(alpha 85 85))
+(scroll-bar-mode 0)
+(menu-bar-mode 0)
+(set-frame-parameter (selected-frame) 'alpha '(95 70))
+;;(add-to-list 'default-frame-alist '(undecorated . t))
+(add-to-list 'default-frame-alist '(alpha 95 70))
 
 
 (require 'package) ;; archss
+
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 (defvar required-packages
@@ -108,13 +118,15 @@
     evil evil-leader evil-visual-replace evil-nerd-commenter
     expand-region
     popwin
+    winum
     ;; popup
     flycheck flycheck-color-mode-line
     ;; flycheck-pos-tip
     company dante direnv
-    gruvbox-theme habamax-theme
+    gruvbox-theme habamax-theme ample-theme
     magit evil-magit
     org
+    ws-butler
     ) ;; end registered packages
    "a list of packages to ensure are installed at launch.") ;; end of defvar
 
@@ -155,7 +167,8 @@
   ;; (set-frame-parameter nil 'background-mode 'dark)
   ;; (set-terminal-parameter nil 'background-mode 'dark)
   (load-theme 'gruvbox-dark-hard t)
-  ;; (load-theme 'habamax t)
+  ;;(load-theme 'habamax t)
+  ;; (load-theme 'ample-light t)
  ) ;; end of color-theme
 
 ;; COMPLETION
@@ -203,21 +216,23 @@
 (setq browse-url-generic-program (executable-find "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"))
 
 ;; dantess
-(use-package dante
-  :after (direnv flycheck)
-  :ensure t
-  :init
-  :config
-  (let ((filename "/Users/taemu/.emacs.d/native/libemacs-dyn-cabal.dylib"))
-    (if (and (file-exists-p filename) (file-executable-p filename))
-        (progn
-          (module-load filename)
-          (fset 'dante-target (lambda () (emacs-dyn-cabal-target (haskell-cabal-find-file) (buffer-file-name))))
-          (setq-default dante-repl-command-line '("cabal" "repl" (dante-target) "--builddir=dist/dante")))
-      (setq-default dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante"))
-      ;; (setq-default dante-repl-command-line-methods-alist `((bare  . ,(lambda (root) '("cabal" "repl" dante-target "--builddir=dist/dante")))))
-  (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
- ))) ;; end of dante
+;; (use-package dante
+;;   :after (direnv flycheck)
+;;   :ensure t
+;;   :init
+;;   :config
+;;   (let ((filename "c:/Users/taemu/.emacs.d/native/emacs-dyn-cabal.dll"))
+;;     (if (file-exists-p filename)
+;;         (progn
+;;           (module-load filename)
+;;           (fset 'dante-target (lambda () (emacs-dyn-cabal-target (haskell-cabal-find-file) (buffer-file-name))))
+;;           (setq-default dante-repl-command-line '("stack" "ghci" "--load")))
+;;           ;; (setq-default dante-repl-command-line '("cabal" "new-repl" (dante-target) "--allow-newer" "--builddir=dist/dante")))
+;;           ;; (setq-default dante-repl-command-line '("cabal" "repl" (dante-target) "--builddir=dist/dante")))
+;;       (setq-default dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante"))
+;;       ;; (setq-default dante-repl-command-line-methods-alist `((bare  . ,(lambda (root) '("cabal" "repl" dante-target "--builddir=dist/dante")))))
+;;   (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
+;;  ))) ;; end of dante
 
 (use-package haskell-mode
   :init
@@ -233,7 +248,7 @@
   ;; (define-key haskell-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
   ; search work under the cursor in hoogle
   ;; (define-key haskell-mode-map (kbd "C-:") 'haskell-search-hoogle)
-  (add-hook 'haskell-mode-hook 'flycheck-mode)  
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
  ) ;; end of haskell-mode
 
 ;; envss
@@ -259,6 +274,11 @@
   (popwin-mode 1)
  ) ;; end of popwin
 
+(use-package winum
+  :config
+  (winum-mode 1)
+  ) ;; end of winum
+
 ;; evilss
 (use-package evil
   :after evil-leader
@@ -266,7 +286,18 @@
   :init
   (global-set-key (kbd "s-j") 'evil-scroll-down)
   (global-set-key (kbd "s-k") 'evil-scroll-up)
-  :config 
+  (defun custom/evil-shift-left-visual ()
+    (interactive)
+    (call-interactively 'evil-shift-left)
+    (evil-normal-state)
+    (evil-visual-restore))
+  (defun custom/evil-shift-right-visual ()
+    (interactive)
+    (call-interactively 'evil-shift-right)
+    ;; (evil-shift-right (region-beginning) (region-end))
+    (evil-normal-state)
+    (evil-visual-restore))
+  :config
   (define-key evil-motion-state-map (kbd "SPC") nil)
   (define-key evil-visual-state-map (kbd "SPC") nil)
   (define-key evil-motion-state-map (kbd "RET") nil)
@@ -275,10 +306,12 @@
   (define-key evil-visual-state-map (kbd "TAB") nil)
   (define-key evil-normal-state-map (kbd "C-.") nil)
   (define-key evil-normal-state-map (kbd "M-.") nil)
-
+  (define-key evil-visual-state-map (kbd ">") 'custom/evil-shift-right-visual)
+  (define-key evil-visual-state-map (kbd "<") 'custom/evil-shift-left-visual)
   ;; https://github.com/cofi/evil-leader/issues/31
   ;; but, it's not working for haskell-cabal-mode
   ;; (evil-set-initial-state 'haskell-cabal-mode 'motion)
+  (setq-default evil-shift-width 2)
   (evil-mode 1)
  ) ;; end of evil
 
@@ -316,7 +349,7 @@
    "nw" 'widen
 
    "fs" 'find-file
-   "fd" 'evil-delete-buffer
+   "fd" 'kill-this-buffer
    "ff" 'switch-to-buffer
    "wd" 'evil-window-delete
    "wh" 'evil-window-left
@@ -339,7 +372,7 @@
     "h" 'haskell-hoogle-lookup-from-local)
   (evil-leader/set-key-for-mode 'emacs-lisp-mode "b" 'byte-compile-file)
 
-  (global-evil-leader-mode) 
+  (global-evil-leader-mode)
  ) ;; end of evil-leader
 
 (use-package evil-visual-replace
@@ -381,7 +414,26 @@
 (use-package magit
   :init
   :config
+  (add-to-list 'magit-diff-arguments "--ignore-space-at-eol")
  ) ;; end of magit
 
-(custom-set-variables)
-(custom-set-faces)
+(use-package ws-butler
+  :config
+  (add-hook 'prog-mode-hook #'ws-butler-mode)
+ ) ;; end of ws-butler
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("7499d981a065f5a0f030e5f3cfe6536299da32bfff7424d58776dd7c5a6d98e2" "771e8a38645407751e9025587ef13449002c615a0e124ccbb34a6efa71438bd6" default))
+ '(package-selected-packages
+   '(ample-theme use-package popwin popup olivetti habamax-theme gruvbox-theme flycheck-pos-tip flycheck-color-mode-line expand-region evil-visual-replace evil-nerd-commenter evil-magit evil-leader direnv dante company color-theme)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

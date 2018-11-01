@@ -26,7 +26,7 @@
 (global-set-key (kbd "C-<tab>") 'next-buffer)
 (global-set-key (kbd "C-M-<tab>") 'previous-buffer)
 (global-set-key (kbd "M-b") 'kill-this-buffer)            ; kill current buffer without asking
-(global-set-key (kbd "M-w") 'switch-to-buffer)
+(global-set-key (kbd "M-w") 'ivy-switch-buffer)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "M-j") 'evil-scroll-down)
 (global-set-key (kbd "M-k") 'evil-scroll-up)
@@ -127,6 +127,7 @@
     magit evil-magit
     org
     ws-butler
+    ivy counsel swiper ivy-rich ace-window
     ) ;; end registered packages
    "a list of packages to ensure are installed at launch.") ;; end of defvar
 
@@ -276,6 +277,13 @@
 
 (use-package winum
   :config
+  (global-set-key (kbd "M-0") 'winum-select-window-0-or-10)
+  (global-set-key (kbd "M-1") 'winum-select-window-1)
+  (global-set-key (kbd "M-2") 'winum-select-window-2)
+  (global-set-key (kbd "M-3") 'winum-select-window-3)
+  (global-set-key (kbd "M-4") 'winum-select-window-4)
+  (global-set-key (kbd "M-5") 'winum-select-window-5)
+  (global-set-key (kbd "M-6") 'winum-select-window-6)
   (winum-mode 1)
   ) ;; end of winum
 
@@ -308,6 +316,7 @@
   (define-key evil-normal-state-map (kbd "M-.") nil)
   (define-key evil-visual-state-map (kbd ">") 'custom/evil-shift-right-visual)
   (define-key evil-visual-state-map (kbd "<") 'custom/evil-shift-left-visual)
+  (define-key evil-motion-state-map (kbd "/") 'swiper)
   ;; https://github.com/cofi/evil-leader/issues/31
   ;; but, it's not working for haskell-cabal-mode
   ;; (evil-set-initial-state 'haskell-cabal-mode 'motion)
@@ -319,9 +328,9 @@
   :init
   ;; easy user init file editing
   (defun find-user-init-file ()
-    "Edit the `user-init-file', in another window."
+    "Edit the `user-init-file', in current window."
     (interactive)
-    (find-file-other-window user-init-file))
+    (find-file user-init-file))
   (defun reload-user-init-file ()
     "Edit the `user-init-file', in another window."
     (interactive)
@@ -336,8 +345,6 @@
    "el" 'toggle-flycheck-error-list
    "en" 'flycheck-next-error
    "e;" 'flycheck-previous-error
-   ;; hs-lint
-   "l" 'hs-lint
    ;; expand-region
    "v" 'er/expand-region
    ;; evil-nerd-commenter
@@ -348,9 +355,9 @@
    "nn" 'narrow-to-region
    "nw" 'widen
 
-   "fs" 'find-file
+   "fs" 'counsel-find-file
    "fd" 'kill-this-buffer
-   "ff" 'switch-to-buffer
+   "ff" 'ivy-switch-buffer
    "wd" 'evil-window-delete
    "wh" 'evil-window-left
    "wj" 'evil-window-down
@@ -368,9 +375,16 @@
   (evil-leader/set-key-for-mode 'haskell-mode
     ;; TODO: dante inserting type at
     ;; "m" 'dante-blah
-    ";" 'dante-type-at
+   ;; hs-lint
+    "e/" 'hs-lint
+    "da" 'dante-type-at
+    "di" 'dante-info
+    "dm" 'dante-mode
     "h" 'haskell-hoogle-lookup-from-local)
-  (evil-leader/set-key-for-mode 'emacs-lisp-mode "b" 'byte-compile-file)
+
+  (evil-leader/set-key-for-mode 'emacs-lisp-mode
+    "bb" (lambda () (interactive) (byte-compile-file (buffer-file-name (current-buffer))))
+    "bc" (lambda () (interactive) (check-parens)))
 
   (global-evil-leader-mode)
  ) ;; end of evil-leader
@@ -406,9 +420,10 @@
   :ensure t
   :init
   (setq olivetti-body-width 120)
-  (setq olivetti-hide-mode-line t)
+  (setq olivetti-hide-mode-line nil)
   (setq olivetti-hide-line-numbers t)
   :config
+  (add-hook 'prog-mode-hook #'olivetti-mode)
  ) ;; end of olivetti
 
 (use-package magit
@@ -421,6 +436,23 @@
   :config
   (add-hook 'prog-mode-hook #'ws-butler-mode)
  ) ;; end of ws-butler
+
+(use-package ivy
+  :config
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "M-o") 'ace-window)
+  (global-set-key (kbd "M-d") 'ace-delete-window)
+  ) ;; end of ivy
+;; (use-package swiper)
+;; (use-package counsel)
+
+
+
+(use-package ivy-rich
+  :after counsel
+  :config
+  (ivy-rich-mode 1)
+ ) ;; end of ivy-rich
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

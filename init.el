@@ -31,7 +31,7 @@
 (global-set-key (kbd "M-j") 'evil-scroll-down)
 (global-set-key (kbd "M-k") 'evil-scroll-up)
 (global-set-key (kbd "C-M-;") 'eval-region)
-
+(global-set-key (kbd "M-z") 'fc-eval-and-replace)
 ;; auto indent
 ;; (define-key global-map (kbd "RET") 'newline-and-indent)
 
@@ -40,6 +40,16 @@
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 ;; attemp to save orignal ESC functionality while support remap ESC to C-g
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+
+(defun fc-eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
 
 
 ;; line numbers
@@ -103,10 +113,9 @@
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
 (menu-bar-mode 0)
-(set-frame-parameter (selected-frame) 'alpha '(95 70))
+(set-frame-parameter (selected-frame) 'alpha '(75 70))
 ;;(add-to-list 'default-frame-alist '(undecorated . t))
-(add-to-list 'default-frame-alist '(alpha 95 70))
-
+(add-to-list 'default-frame-alist '(alpha 75 70))
 
 (require 'package) ;; archss
 
@@ -218,23 +227,23 @@
 (setq browse-url-generic-program (executable-find "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"))
 
 ;; dantess
-;; (use-package dante
-;;   :after (direnv flycheck)
-;;   :ensure t
-;;   :init
-;;   :config
-;;   (let ((filename "c:/Users/taemu/.emacs.d/native/emacs-dyn-cabal.dll"))
-;;     (if (file-exists-p filename)
-;;         (progn
-;;           (module-load filename)
-;;           (fset 'dante-target (lambda () (emacs-dyn-cabal-target (haskell-cabal-find-file) (buffer-file-name))))
-;;           (setq-default dante-repl-command-line '("stack" "ghci" "--load")))
-;;           ;; (setq-default dante-repl-command-line '("cabal" "new-repl" (dante-target) "--allow-newer" "--builddir=dist/dante")))
-;;           ;; (setq-default dante-repl-command-line '("cabal" "repl" (dante-target) "--builddir=dist/dante")))
-;;       (setq-default dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante"))
-;;       ;; (setq-default dante-repl-command-line-methods-alist `((bare  . ,(lambda (root) '("cabal" "repl" dante-target "--builddir=dist/dante")))))
-;;   (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
-;;  ))) ;; end of dante
+(use-package dante
+  :after (direnv flycheck)
+  :ensure t
+  :init
+  :config
+  (let ((filename "c:/Users/taemu/.emacs.d/native/myflib.dll"))
+    (if (file-exists-p filename)
+        (progn
+          (module-load filename)
+          (fset 'dante-target (lambda () (emacs-dyn-cabal-target (haskell-cabal-find-file) (buffer-file-name))))
+          (setq-default dante-repl-command-line '("cabal" "new-repl" (dante-target) "--builddir=dist/dante")))
+      (setq-default dante-repl-command-line '("cabal" "repl" dante-target "--builddir=dist/dante"))
+  (flycheck-add-next-checker 'haskell-dante '(warning . haskell-hlint))
+ ))) ;; end of dante
+
+
+
 
 (use-package haskell-mode
   :init
@@ -382,6 +391,7 @@
     "da" 'dante-type-at
     "di" 'dante-info
     "dm" 'dante-mode
+    "dv" 'dante-eval-block
     "h" 'haskell-hoogle-lookup-from-local)
 
   (evil-leader/set-key-for-mode 'emacs-lisp-mode
